@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const { ApolloServer } = require("apollo-server");
 const typeDefs = require("./graphql/typeDefs");
 const resolvers = require("./graphql/resolvers");
+const contextMiddleware = require("./utils/contextMiddleware");
 
 dotenv.config();
 
@@ -19,7 +20,7 @@ const main = async () => {
     const server = new ApolloServer({
       typeDefs,
       resolvers,
-      // context: contextMiddleware,
+      context: contextMiddleware,
       // subscriptions: { path: "/" },
     });
 
