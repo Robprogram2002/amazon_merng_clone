@@ -7,7 +7,7 @@ const AuthRoutes = () => {
     <BrowserRouter>
       <Switch>
         <Route path="/login" exact component={LoginPage} key="login" />
-        <Redirect to="/login" />
+        <Redirect to="/" />
       </Switch>
     </BrowserRouter>
   );

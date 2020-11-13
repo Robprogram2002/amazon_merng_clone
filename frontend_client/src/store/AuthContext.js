@@ -1,48 +1,88 @@
 import React, { createContext, useReducer } from "react";
 import jwtDecode from "jwt-decode";
+// import { gql, useLazyQuery } from "@apollo/client";
+// import { gql, useLazyQuery } from "@apollo/client";
+
+// const GET_USER = gql`
+//   query getUser($id: String!) {
+//     getUser(id: $id) {
+//       username
+//       email
+//       token
+//       userId
+//       imageUrl
+//     }
+//   }
+// `;
 
 let initialState = {
-  userToken: null,
   userId: null,
+  userToken: null,
+  userData: null,
 };
-
-// const initialFunctContext = {
-//   //   signUp: () => {},
-//   login: () => {},
-//   logout: () => {},
-//   //   register: () => {},
-// };
-
-export const authContext = createContext();
-export const authFunctContext = createContext();
 
 const token = localStorage.getItem("token");
 if (token) {
   const decodedToken = jwtDecode(token);
   const expiresAt = new Date(decodedToken.exp * 1000);
-
   if (new Date() > expiresAt) {
     localStorage.removeItem("token");
   } else {
     initialState = {
-      userToken: token,
       userId: decodedToken.userId,
+      userToken: token,
+      userData: { username: decodedToken.username },
     };
   }
-} else console.log("No token found");
+}
+
+export const authContext = createContext();
+export const authFunctContext = createContext();
 
 const AuthProvider = ({ children }) => {
+  // const [userToken, setUserToken] = useState();
+  // const [initialState, setInitialState] = useState({
+  //   userId: null,
+  //   userToken: null,
+  //   userData: null,
+  // });
+
+  // const [getUser, { loading, error }] = useLazyQuery(GET_USER, {
+  //   onCompleted: (data) => {
+  //     setInitialState({
+  //       userId: data.getUser.userId,
+  //       userData: data.getUser,
+  //       userToken: userToken,
+  //     });
+  //   },
+  // });
+
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
+  //   if (token) {
+  //     const decodedToken = jwtDecode(token);
+  //     const expiresAt = new Date(decodedToken.exp * 1000);
+  //     if (new Date() > expiresAt) {
+  //       localStorage.removeItem("token");
+  //     } else {
+  //       setUserToken(token);
+  //       getUser({ variables: { id: decodedToken.userId } });
+  //     }
+  //   }
+  // }, [getUser]);
+
   const authReducer = (prevState, action) => {
     switch (action.type) {
       case "LOGIN":
         return {
           ...prevState,
-          userId: action.userId,
+          userData: action.userData,
           userToken: action.userToken,
+          userId: action.userData.userId,
         };
       case "LOGOUT":
         localStorage.removeItem("token");
-        localStorage.removeItem("userId");
+        localStorage.removeItem("userData");
         return initialState;
 
       default:
@@ -53,15 +93,15 @@ const AuthProvider = ({ children }) => {
   const [authState, dispatch] = useReducer(authReducer, initialState);
 
   const authFunctionsState = {
-    login: async (userId, token) => {
+    login: async (userData, token) => {
       dispatch({
         type: "LOGIN",
-        userId,
+        userData,
         userToken: token,
       });
 
       localStorage.setItem("token", token);
-      localStorage.setItem("userId", userId);
+      localStorage.setItem("userId", userData.userId);
     },
 
     logout: () => {
@@ -70,7 +110,7 @@ const AuthProvider = ({ children }) => {
       });
 
       localStorage.removeItem("token");
-      localStorage.removeItem("user");
+      localStorage.removeItem("userId");
     },
   };
 
