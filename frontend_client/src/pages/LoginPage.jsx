@@ -37,7 +37,13 @@ const LoginPage = (props) => {
 
   return (
     <Divcenter>
-      <DivDouble border={true} height={400} width={940}>
+      <DivDouble
+        border={true}
+        height={450}
+        width={940}
+        borderRadius={12}
+        margin={1}
+      >
         {isLogin ? (
           <>
             <LoginIlustration login={isLogin} />

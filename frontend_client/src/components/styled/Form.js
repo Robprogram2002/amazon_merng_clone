@@ -29,4 +29,5 @@ export const Title = styled.h3`
   text-align: center;
   margin: 0;
   margin-bottom: 0.6rem;
+  padding: 0rem;
 `;

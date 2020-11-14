@@ -14,6 +14,7 @@ module.exports = {
         createdAt: user.createdAt,
         imageUrl: user.profile,
         userId: user._id,
+        type: user.class,
       };
     },
   },
@@ -58,8 +59,9 @@ module.exports = {
         throw error;
       }
     },
-    login: async (_, { email, password }) => {
+    login: async (_, { email, password, type }) => {
       let errors = {};
+      console.log("andjknjn wqwewuiqh  ----------", type);
 
       try {
         if (email.trim() === "") errors.email = "email must not be empty";
@@ -69,12 +71,20 @@ module.exports = {
         if (Object.keys(errors).length > 0) {
           throw new UserInputError("bad input", { errors });
         }
-
-        const user = await User.findOne({ email });
+        let user;
+        if (type === "admin") {
+          user = await User.findOne({ email: email, class: "admin" });
+          console.log("andjknjn wqwewuiqh  ----------", type);
+          console.log(user);
+        } else if (type === "seller") {
+          user = await User.findOne({ email: email, class: "seller" });
+        } else {
+          user = await User.findOne({ email });
+        }
 
         if (!user) {
           errors.email = "user not found";
-          throw new UserInputError("user not found", { errors });
+          throw new UserInputError(`user nor foud ${type}`, { errors });
         }
 
         const correctPassword = await bcrypt.compare(password, user.password);
@@ -105,6 +115,7 @@ module.exports = {
           token,
           imageUrl: user.profile,
           userId: user._id,
+          type: user.class,
         };
       } catch (error) {
         throw error;

@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import AdminLogin from "./pages/AdminLogin";
 import LoginPage from "./pages/LoginPage";
 
 const AuthRoutes = () => {
@@ -7,7 +8,9 @@ const AuthRoutes = () => {
     <BrowserRouter>
       <Switch>
         <Route path="/login" exact component={LoginPage} key="login" />
-        <Redirect to="/" />
+        <Route path="/register" exact component={LoginPage} key="register" />
+        <Route path="/admin/login" exact component={AdminLogin} />
+        <Redirect to="/login" />
       </Switch>
     </BrowserRouter>
   );
