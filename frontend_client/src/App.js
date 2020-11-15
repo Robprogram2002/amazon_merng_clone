@@ -34,14 +34,10 @@ function App() {
   } else if (userData.type === "admin") {
     return (
       <BrowserRouter>
-        <Switch>
-          <Route
-            path="/login/deshboard"
-            render={() => <AdminDeshboard user={userData} />}
-            exact
-          />
-          <Redirect to="/login/deshboard" />
-        </Switch>
+        <Route
+          path="/admin/deshboard"
+          render={(props) => <AdminDeshboard user={userData} {...props} />}
+        />
       </BrowserRouter>
     );
   } else {
@@ -49,7 +45,6 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Route path="/" exact render={() => <Home user={userData} />} />
-          <Redirect to="/" />
         </Switch>
       </BrowserRouter>
     );

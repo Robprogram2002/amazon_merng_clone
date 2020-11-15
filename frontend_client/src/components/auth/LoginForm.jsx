@@ -57,7 +57,7 @@ const LoginForm = ({
             // } else {
             if (admin === true) {
               loginGraph({ variables: { ...values, type: "admin" } });
-              history.pish("/admin/deshboard");
+              history.push("/admin/deshboard");
             } else {
               loginGraph({ variables: { ...values, type: "customer" } });
             }

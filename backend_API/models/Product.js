@@ -2,6 +2,19 @@ const { Schema, model } = require("mongoose");
 
 const productSchema = new Schema(
   {
+    departmentId: {
+      type: Schema.Types.ObjectId,
+      ref: "Department",
+      required: true,
+    },
+    categoryId: {
+      type: Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
+    },
+    subcategoryId: {
+      type: String,
+    },
     title: {
       type: String,
       required: true,
@@ -32,7 +45,7 @@ const productSchema = new Schema(
     seller: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: "User",
+      ref: "Seller",
     },
     caracteristicas: [
       {
@@ -42,14 +55,16 @@ const productSchema = new Schema(
     comments: [
       {
         type: Schema.Types.ObjectId,
-        red: "Comment",
+        ref: "Comment",
       },
     ],
     discont: {
       type: Number,
+      default: null,
     },
     rating: {
       type: Number,
+      default: 0,
     },
     questions: [
       {

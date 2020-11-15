@@ -86,7 +86,7 @@ const RegisterForm = ({ initialSingUpValues, registerSchema, setIsLogin }) => {
             <Form autoComplete="Off" className={Class.Form}>
               <DivColumn center={true}>
                 <DivField
-                  height={20}
+                  height={28}
                   // error={formikProps.errors.username ? true : false}
                   error={
                     formikProps.errors.username && formikProps.touched.username
@@ -104,10 +104,14 @@ const RegisterForm = ({ initialSingUpValues, registerSchema, setIsLogin }) => {
                     />
                   </DivIconField>
                 </DivField>
-                <ErrorMessage name="username" component="span" />
+                <ErrorMessage
+                  name="username"
+                  component="span"
+                  className={Class.ErrorMessege}
+                />
 
                 <DivField
-                  height={20}
+                  height={28}
                   error={
                     formikProps.errors.email && formikProps.touched.email
                       ? true
@@ -124,9 +128,13 @@ const RegisterForm = ({ initialSingUpValues, registerSchema, setIsLogin }) => {
                     />
                   </DivIconField>
                 </DivField>
-                <ErrorMessage name="email" component="span" />
+                <ErrorMessage
+                  name="email"
+                  component="span"
+                  className={Class.ErrorMessege}
+                />
                 <DivField
-                  height={20}
+                  height={26}
                   error={
                     formikProps.errors.password && formikProps.touched.password
                       ? true
@@ -146,10 +154,10 @@ const RegisterForm = ({ initialSingUpValues, registerSchema, setIsLogin }) => {
                 <ErrorMessage
                   name="password"
                   component="span"
-                  className={Class.Error}
+                  className={Class.ErrorMessege}
                 />
                 <DivField
-                  height={20}
+                  height={26}
                   error={
                     formikProps.errors.confirmPassword &&
                     formikProps.touched.confirmPassword
@@ -170,7 +178,7 @@ const RegisterForm = ({ initialSingUpValues, registerSchema, setIsLogin }) => {
                 <ErrorMessage
                   name="confirmPassword"
                   component="span"
-                  className={Class.Error}
+                  className={Class.ErrorMessege}
                 />
 
                 <DivColumn>

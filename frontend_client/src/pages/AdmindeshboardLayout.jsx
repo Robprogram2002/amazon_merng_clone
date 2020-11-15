@@ -1,10 +1,12 @@
+import { Breadcrumb, Menu } from "antd";
+import Layout, { Content, Footer } from "antd/lib/layout/layout";
+import Sider from "antd/lib/layout/Sider";
+import Item from "antd/lib/list/Item";
+import SubMenu from "antd/lib/menu/SubMenu";
 import React, { useState } from "react";
-// import SideNavBar from "../components/admin/SideNavBar";
-// import { Divcenter, DivDouble } from "../components/styled/Containers";
+import styled from "styled-components";
+import Icon from "../components/layout/Icon";
 
-import "antd/dist/antd.css";
-// import './index.css';
-import { Layout, Menu, Breadcrumb } from "antd";
 import {
   DesktopOutlined,
   FileOutlined,
@@ -12,16 +14,7 @@ import {
   UserOutlined,
   MailOutlined,
 } from "@ant-design/icons";
-import Item from "antd/lib/list/Item";
-import styled from "styled-components";
-import Icon from "../components/layout/Icon";
-import CreateProduct from "../components/admin/CreateProduct";
-import AddDepartment from "../components/admin/AddDepartment";
-import AddCategory from "../components/admin/AddCategory";
-import AddSeller from "../components/admin/AddSeller";
-import AddTag from "../components/admin/AddTag";
-
-import { Route, useRouteMatch, Switch } from "react-router-dom";
+import "antd/dist/antd.css";
 
 const UserRow = styled.div`
   display: grid;
@@ -29,7 +22,7 @@ const UserRow = styled.div`
   grid-template-rows: 100%;
   color: aliceblue;
   font-family: "Roboto", sans-serif;
-  padding: 0rem;
+  padding: 0.4rem 0rem;
   width: 100%;
   max-width: 100%;
 `;
@@ -41,15 +34,12 @@ const Span = styled.span`
   align-items: center;
 `;
 
-const { Header, Content, Footer, Sider } = Layout;
-const { SubMenu } = Menu;
+const { Header } = Layout;
 
-const AdminDeshboard = ({ user, history }) => {
+const AdmindeshboardLayout = ({ user, history }) => {
   const [state, setState] = useState({
     collapsed: false,
   });
-
-  let { path, url } = useRouteMatch();
 
   const onCollapse = (collapsed) => {
     console.log(collapsed);
@@ -97,44 +87,36 @@ const AdminDeshboard = ({ user, history }) => {
               </UserRow>
             </Item>
           </SubMenu>
-          <Menu.Item
-            key="9"
-            icon={<FileOutlined />}
-            onClick={() => history.push(`${url}`)}
-          >
+          <Menu.Item key="9" icon={<FileOutlined />}>
             Resumen
           </Menu.Item>
           <SubMenu key="sub1" icon={<UserOutlined />} title="Forms">
             <Menu.Item
               key="3"
-              onClick={() => history.push(`${url}/forms/create-product`)}
+              onClick={() =>
+                history.push("/admin/deshboard/forms/create-product")
+              }
             >
               Create Product
             </Menu.Item>
             <Menu.Item
               key="4"
-              onClick={() => history.push(`${url}/forms/add-department`)}
+              onClick={() =>
+                history.push("/admin/deshboard/forms/add-department")
+              }
             >
               Add department
             </Menu.Item>
             <Menu.Item
               key="5"
-              onClick={() => history.push(`${url}/forms/add-category`)}
+              onClick={() =>
+                history.push("/admin/deshboard/forms/add-category")
+              }
             >
               Add Category
             </Menu.Item>
-            <Menu.Item
-              key="12315"
-              onClick={() => history.push(`${url}/forms/add-seller`)}
-            >
-              Add Seller
-            </Menu.Item>
-            <Menu.Item
-              key="312i9812"
-              onClick={() => history.push(`${url}/forms/add-tag`)}
-            >
-              Add Tags
-            </Menu.Item>
+            <Menu.Item key="12315">Add Seller</Menu.Item>
+            <Menu.Item key="12315">Add Tags</Menu.Item>
           </SubMenu>
           <SubMenu key="sub2" icon={<TeamOutlined />} title="Products">
             <Menu.Item key="6">All products</Menu.Item>
@@ -168,38 +150,7 @@ const AdminDeshboard = ({ user, history }) => {
             className="site-layout-background"
             style={{ padding: 24, minHeight: 360 }}
           >
-            <Switch>
-              <Route
-                exact
-                path={path}
-                render={() => <h1> This is a resume </h1>}
-              />
-              <Route
-                path={`${path}/forms/create-product`}
-                exact
-                render={() => <CreateProduct />}
-              />
-              <Route
-                path={`${path}/forms/add-department`}
-                exact
-                render={() => <AddDepartment />}
-              />
-              <Route
-                path={`${path}/forms/add-category`}
-                exact
-                render={() => <AddCategory />}
-              />
-              <Route
-                path={`${path}/forms/add-seller`}
-                exact
-                render={() => <AddSeller />}
-              />
-              <Route
-                path={`${path}/forms/add-tag`}
-                exact
-                render={() => <AddTag />}
-              />
-            </Switch>
+            {/* {children} */}
           </div>
         </Content>
         <Footer style={{ textAlign: "center" }}>
@@ -210,22 +161,4 @@ const AdminDeshboard = ({ user, history }) => {
   );
 };
 
-// const AdminDeshboard = ({ user }) => {
-//   const [editor, setEditor] = useState("");
-//   console.log(editor);
-//   return (
-//     <div style={{ width: "100%", height: "100%" }}>
-//       <DivDouble
-//         first={20}
-//         second={80}
-//         width={100}
-//         height={100}
-//         percentaje={true}
-//       >
-//         <SideNavBar />
-//       </DivDouble>
-//     </div>
-//   );
-// };
-
-export default AdminDeshboard;
+export default AdmindeshboardLayout;
