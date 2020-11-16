@@ -42,7 +42,7 @@ const productSchema = new Schema(
       type: String,
       required: true,
     },
-    seller: {
+    sellerId: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "Seller",
@@ -64,7 +64,7 @@ const productSchema = new Schema(
     },
     rating: {
       type: Number,
-      default: 0,
+      default: 0.0,
     },
     questions: [
       {

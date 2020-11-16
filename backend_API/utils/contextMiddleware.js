@@ -14,7 +14,7 @@ module.exports = (context) => {
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
       context.user = decodedToken;
-      console.log(err);
+      err && console.log(err);
     });
   }
 

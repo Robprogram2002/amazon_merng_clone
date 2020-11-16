@@ -15,6 +15,8 @@ module.exports = gql`
     title: String!
     images: [String!]!
     categories: [ID!]
+    createdAt: String
+    departmentId: ID!
   }
 
   type Subcategory {
@@ -26,6 +28,9 @@ module.exports = gql`
     title: String!
     image: String!
     subcategories: [Subcategory!]
+    createdAt: String
+    departmentId: ID!
+    categoryId: ID!
   }
 
   type Location {
@@ -36,12 +41,33 @@ module.exports = gql`
     code: String!
   }
 
+  input InputLocation {
+    country: String!
+    state: String!
+    city: String!
+    address: String!
+    code: String!
+  }
+
+  input InputContact {
+    email: String
+    phone: String
+    facebook: String
+    website: String
+    tweeter: String
+  }
+
   type Contact {
     email: String
     phone: String
     facebook: String
     website: String
     tweeter: String
+  }
+
+  input SubcategoryInput {
+    name: String!
+    id: String!
   }
 
   type SellerComments {
@@ -60,34 +86,45 @@ module.exports = gql`
     images: [String!]
     contacts: Contact
     products: [ID!]
-    rating: Number!
+    rating: Float!
     comments: [SellerComments!]
+    sellerId: ID!
   }
 
   type Product {
-    seller: ID!
+    sellerId: ID!
     departmentId: ID!
     categoryId: ID!
     subcategoryId: String
     title: String!
     description: String!
-    images: [String!]
-    price: Number!
-    stock: Number!
+    images: [String!]!
+    price: Float!
+    stock: Int!
     brand: String!
     caracteristicas: [String!]!
     prime: Boolean!
     comments: [ID!]
-    discount: Number
-    rating: Number!
+    discount: Float
+    rating: Float!
     questions: [ID!]
     freesend: Boolean!
-    prime: Boolean
+    createdAt: String
+    productId: ID!
   }
 
   type Query {
     hello: String!
     getUser(id: String!): ReturnUser!
+    getDepartments(departmentId: ID): [Department!]!
+    getCategories(categoryId: ID): [Category!]!
+    getProducts(
+      departmentId: ID
+      categoryId: ID
+      subcategoryId: ID
+      productId: ID
+    ): [Product!]!
+    getSellers(sellerId: ID): [Seller!]!
   }
 
   type Mutation {
@@ -100,15 +137,12 @@ module.exports = gql`
       confirmPassword: String!
     ): ReturnUser!
 
-    addDepartment(
-      title: String!
-      images: [String!]!
-      categories: [ID!]
-    ): Department!
+    addDepartment(title: String!, images: [String!]!): Department!
 
     addCategory(
+      departmentId: ID!
       title: String!
-      subcategories: [String!]
+      subcategories: [SubcategoryInput!]
       image: String!
     ): Category!
 
@@ -116,25 +150,26 @@ module.exports = gql`
       userId: ID!
       companyName: String!
       companyImage: String!
-      location: Location!
+      location: InputLocation!
       description: String!
       images: [String!]
-      contacts: Contact
+      contacts: InputContact
     ): Seller!
 
     addProduct(
-      seller: ID!
+      sellerId: ID!
       departmentId: ID!
       categoryId: ID!
       subcategoryId: String
       title: String!
       description: String!
       images: [String!]
-      price: Number!
-      stock: Number!
+      price: Float!
+      stock: Int!
       brand: String!
       caracteristicas: [String!]!
       prime: Boolean!
+      discount: Float
     ): Product!
   }
 `;

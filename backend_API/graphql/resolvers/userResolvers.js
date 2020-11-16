@@ -2,7 +2,6 @@ const User = require("../../models/User");
 const bcrypt = require("bcryptjs");
 const { UserInputError, AuthenticationError } = require("apollo-server");
 const jwt = require("jsonwebtoken");
-const { where } = require("../../models/User");
 
 module.exports = {
   Query: {

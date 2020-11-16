@@ -1,8 +1,11 @@
 const { Schema, model } = require("mongoose");
-const { schema } = require("./Department");
 
 const categorySchema = new Schema(
   {
+    departmentId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+    },
     title: {
       type: String,
       required: true,
