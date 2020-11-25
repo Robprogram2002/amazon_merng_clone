@@ -19,13 +19,18 @@ export const DivField = styled.div`
     css`
       border: 1px solid #ff0000;
     `}
+  ${(props) =>
+    props.align &&
+    css`
+      align-items: ${props.align};
+    `}
 `;
 
 export const Title = styled.h3`
   font-family: ${fonts.cursive};
-  font-size: 2.6rem;
+  font-size: ${(props) => (props.size ? props.size : 2.6)}rem;
   letter-spacing: 2px;
-  color: ${colors.mainOrange};
+  color: ${(props) => (props.color ? props.color : colors.mainOrange)};
   text-align: center;
   margin: 0;
   margin-bottom: 0.6rem;

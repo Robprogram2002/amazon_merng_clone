@@ -4,7 +4,8 @@ import { Divcenter } from "../../components/styled/Containers";
 import colors from "../../constants/colors";
 
 const IconStyled = styled.i`
-  color: ${colors.mainOrange};
+  color: ${(props) => (props.color ? props.color : colors.mainOrange)};
+  width: auto;
   font-weight: bold;
   ${(props) =>
     props.fontSize &&
@@ -13,10 +14,10 @@ const IconStyled = styled.i`
     `};
 `;
 
-const Icon = ({ icon_name }) => {
+const Icon = ({ icon_name, color }) => {
   return (
-    <Divcenter>
-      <IconStyled className={icon_name} />
+    <Divcenter height={25} width={25}>
+      <IconStyled className={icon_name} color={color} />
     </Divcenter>
   );
 };

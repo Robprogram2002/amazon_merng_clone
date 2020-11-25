@@ -28,18 +28,24 @@ const REGISTER = gql`
     ) {
       username
       email
-      createdAt
+      userId
     }
   }
 `;
 
-const RegisterForm = ({ initialSingUpValues, registerSchema, setIsLogin }) => {
+const RegisterForm = ({
+  initialSingUpValues,
+  registerSchema,
+  setIsLogin,
+  setUserData,
+}) => {
   const [errors, setErrors] = useState();
 
   const [register, { loading }] = useMutation(REGISTER, {
     update: (_, __) => setIsLogin(true),
     onError: (err) => setErrors(err.graphQLErrors[0]),
-    onCompleted: (data) => console.log(data),
+    onCompleted: (data) =>
+      setUserData ? setUserData(data.register.userId) : console.log(data),
   });
 
   errors && alert(errors);
@@ -55,7 +61,7 @@ const RegisterForm = ({ initialSingUpValues, registerSchema, setIsLogin }) => {
     } else {
       console.log(values);
       register({ variables: values });
-      setIsLogin(true);
+      setIsLogin && setIsLogin(true);
     }
   };
 

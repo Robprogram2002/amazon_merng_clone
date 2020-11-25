@@ -1,26 +1,44 @@
-import { ClassicEditor } from "@ckeditor/ckeditor5-build-classic";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import React, { useState } from "react";
-import parse from "html-react-parser";
+import { Divcenter } from "../styled/Containers";
+import "./Editor.css";
 
-const AdminCKEditor = () => {
-  const [dataEditor, setdataEditor] = useState("");
+const AdminCKEditor = ({ setData, dataEditor, placeholder }) => {
+  const [errors] = useState();
+  errors && console.log(errors);
   return (
-    <div>
+    <Divcenter>
       <CKEditor
         editor={ClassicEditor}
+        name="body"
+        placeholder={placeholder}
         data={dataEditor}
-        onChange={(_, editor) => {
-          const data = editor.getData();
-          setdataEditor(data);
+        value={dataEditor}
+        errors={errors}
+        config={{
+          toolbar: [
+            "heading",
+            "|",
+            "bold",
+            "italic",
+            "link",
+            "bulletedList",
+            "numberedList",
+            "blockQuote",
+            "insertTable",
+            "mediaEmbed",
+            "undo",
+            "|",
+            "redo",
+          ],
         }}
-      />
-
-      <div>
-        <h1>content</h1>
-        {parse(dataEditor)}
-      </div>
-    </div>
+        onChange={(event, editor) => {
+          const data = editor.getData();
+          setData(data);
+        }}
+      ></CKEditor>
+    </Divcenter>
   );
 };
 

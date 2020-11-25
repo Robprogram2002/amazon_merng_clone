@@ -49,17 +49,17 @@ const LoginForm = ({
           initialValues={initialLoginValues}
           validateOnBlur={true}
           validationSchema={loginSchema}
-          onSubmit={(values, actions) => {
+          onSubmit={async (values, actions) => {
             console.log("the function is running");
             // loginFunction({ email: values.email, password: values.password });
             // if (admin === true) {
             //   loginFunction({ variables: { ...values, type: "admin" } });
             // } else {
             if (admin === true) {
-              loginGraph({ variables: { ...values, type: "admin" } });
+              await loginGraph({ variables: { ...values, type: "admin" } });
               history.push("/admin/deshboard");
             } else {
-              loginGraph({ variables: { ...values, type: "customer" } });
+              await loginGraph({ variables: { ...values, type: "customer" } });
             }
             // }
           }}
@@ -136,7 +136,7 @@ const LoginForm = ({
                       height={40}
                       margin={1}
                     >
-                      Submit
+                      {loading ? "Loading ..." : "Submit"}
                     </SimpleButton>
                   </Divcenter>
                 </DivColumn>

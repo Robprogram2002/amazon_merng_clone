@@ -3,7 +3,7 @@ import React from "react";
 const Home = ({ user, history }) => {
   return (
     <div>
-      <h1>Hello from the home {user.email} </h1>
+      <h1>qkeqwkjei qwoeh uiqw weqwu ge </h1>
     </div>
   );
 };

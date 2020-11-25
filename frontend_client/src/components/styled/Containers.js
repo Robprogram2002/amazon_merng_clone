@@ -5,6 +5,8 @@ export const Divcenter = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: ${(props) =>
+    props.flexDirection ? props.flexDirection : "row"};
   height: 100%;
   width: 100%;
   max-height: 100%;
@@ -24,7 +26,7 @@ export const DivDouble = styled.div`
   border: 8px;
   height: ${(props) => props.height}px;
   width: ${(props) => props.width}px;
-  max-height: 100vh;
+  max-height: 100%;
   max-width: 100%;
   overflow: hidden;
   border-radius: ${(props) => (props.borderRadius ? props.borderRadius : 0)}px;
@@ -83,4 +85,40 @@ export const DivColumn = styled.div`
   height: 100%;
   width: 100%;
   justify-content: center;
+`;
+
+export const DivTriple = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+
+  ${(props) =>
+    props.first &&
+    props.second &&
+    props.third &&
+    css`
+      grid-template-columns: ${props.first}%, ${props.second}%, ${props.third}%;
+    `}
+
+  grid-template-rows: 100%;
+  grid-gap: 0rem;
+  margin: ${(props) => (props.margin ? props.margin : 0)}rem;
+  border: 8px;
+  height: ${(props) => props.height}px;
+  width: ${(props) => props.width}px;
+  max-height: ${(props) => (props.maxHeight ? props.maxHeight + "px" : "100%")};
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: ${(props) => (props.borderRadius ? props.borderRadius : 0)}px;
+  ${(props) =>
+    props.border &&
+    css`
+      ${"" /* border: 1px solid #707070; */}
+      box-shadow: -1px 2px 3px 2px rgba(0,0,0,.3)
+    `};
+  ${(props) =>
+    props.percentaje &&
+    css`
+      height: ${props.height}%;
+      width: ${props.width}%;
+    `}
 `;

@@ -26,11 +26,18 @@ const DivTitle = styled.div`
     `}
 `;
 
-const CustomH2 = styled.h2`
+export const CustomH2 = styled.h2`
   font-size: 2.2rem;
   font-family: ${fonts.bigFont};
   letter-spacing: 1.4px;
   color: whitesmoke;
+  ${(props) =>
+    props.center &&
+    css`
+      dipslay: flex;
+      justify-content: center;
+      align-items: center;
+    `}
 `;
 
 // const CustomImg = styled.img`
@@ -58,6 +65,3 @@ const LoginIlustration = ({ login }) => {
 };
 
 export default LoginIlustration;
-{
-  /* "Thousands of products at the best price and with the highest quality"} */
-}

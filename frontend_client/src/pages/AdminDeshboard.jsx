@@ -159,7 +159,7 @@ const AdminDeshboard = ({ user, history }) => {
           <h1 color="white">asndkqkjejio</h1>
         </Header>
 
-        <Content style={{ margin: "0 16px" }}>
+        <Content style={{ margin: "0 16px", height: "100%" }}>
           <Breadcrumb style={{ margin: "16px 0" }}>
             <Breadcrumb.Item>User</Breadcrumb.Item>
             <Breadcrumb.Item>Bill</Breadcrumb.Item>
@@ -182,7 +182,7 @@ const AdminDeshboard = ({ user, history }) => {
               <Route
                 path={`${path}/forms/add-department`}
                 exact
-                render={() => <AddDepartment />}
+                component={AddDepartment}
               />
               <Route
                 path={`${path}/forms/add-category`}

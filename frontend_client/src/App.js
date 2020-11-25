@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import { authContext } from "./store/AuthContext";
 import AuthRoutes from "./AuthRoutes";
 import Home from "./pages/Home";
@@ -33,20 +33,16 @@ function App() {
     return <AuthRoutes />;
   } else if (userData.type === "admin") {
     return (
-      <BrowserRouter>
-        <Route
-          path="/admin/deshboard"
-          render={(props) => <AdminDeshboard user={userData} {...props} />}
-        />
-      </BrowserRouter>
+      <Route
+        path="/admin/deshboard"
+        render={(props) => <AdminDeshboard user={userData} {...props} />}
+      />
     );
   } else {
     return (
-      <BrowserRouter>
-        <Switch>
-          <Route path="/" exact render={() => <Home user={userData} />} />
-        </Switch>
-      </BrowserRouter>
+      <Switch>
+        <Route path="/" exact render={() => <Home user={userData} />} />
+      </Switch>
     );
   }
 }

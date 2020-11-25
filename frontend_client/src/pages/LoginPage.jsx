@@ -6,7 +6,7 @@ import RegisterForm from "../components/auth/RegisterForm";
 import LoginIlustration from "../components/auth/LoginIlustration";
 import { DivDouble, Divcenter } from "../components/styled/Containers";
 
-const registerSchema = Yup.object({
+export const registerSchema = Yup.object({
   username: Yup.string()
     .required("The user name is required")
     .min(3, "The user name must have aleats 3 characters"),
@@ -19,24 +19,38 @@ const loginSchema = Yup.object({
   password: Yup.string().required("Passsword is a required field").min(8),
 });
 
+export const initialSingUpValues = {
+  username: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
+
+const initialLoginValues = {
+  email: "",
+  password: "",
+};
+
 const LoginPage = (props) => {
   const { login } = useContext(authFunctContext);
   const [isLogin, setIsLogin] = useState(true);
 
-  const initialSingUpValues = {
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  };
-
-  const initialLoginValues = {
-    email: "",
-    password: "",
-  };
-
   return (
-    <Divcenter>
+    <Divcenter flexDirection="column">
+      {!isLogin && (
+        <p
+          onClick={() => props.history.push("/login/seller")}
+          style={{
+            marginTop: "20px",
+            color: "royalblue",
+            textDecoration: "Underline",
+            fontStyle: "italic",
+            cursor: "pointer",
+          }}
+        >
+          Are you a seller, register your company?
+        </p>
+      )}
       <DivDouble
         border={true}
         height={450}

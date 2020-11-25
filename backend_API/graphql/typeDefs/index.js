@@ -11,14 +11,6 @@ module.exports = gql`
     type: String
   }
 
-  type Department {
-    title: String!
-    images: [String!]!
-    categories: [ID!]
-    createdAt: String
-    departmentId: ID!
-  }
-
   type Subcategory {
     name: String
     id: String
@@ -30,7 +22,15 @@ module.exports = gql`
     subcategories: [Subcategory!]
     createdAt: String
     departmentId: ID!
-    categoryId: ID!
+    _id: ID!
+  }
+
+  type Department {
+    title: String!
+    images: [String!]!
+    categories: [Category]
+    createdAt: String
+    departmentId: ID!
   }
 
   type Location {
@@ -163,7 +163,7 @@ module.exports = gql`
       subcategoryId: String
       title: String!
       description: String!
-      images: [String!]
+      images: [String!]!
       price: Float!
       stock: Int!
       brand: String!

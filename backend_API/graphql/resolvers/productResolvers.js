@@ -23,7 +23,9 @@ module.exports = {
     getDepartments: async (_, { departmentId }) => {
       try {
         if (departmentId) {
-          const deparment = await Department.findById(departmentId);
+          const deparment = await Department.findById(departmentId).populate(
+            "categories"
+          );
           if (!deparment) {
             throw new UserInputError("Not department was found with this id");
           }
@@ -35,7 +37,7 @@ module.exports = {
             },
           ];
         } else {
-          const deparments = await Department.find();
+          const deparments = await Department.find().populate("categories");
           return deparments.map((deparment) => {
             return {
               ...deparment.toJSON(),
@@ -196,11 +198,8 @@ module.exports = {
         description,
         images,
         contacts,
-      },
-      context
+      }
     ) => {
-      await adminCheck(context);
-
       const seller = await Seller.create({
         userId,
         companyName,
