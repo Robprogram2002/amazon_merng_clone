@@ -9,7 +9,13 @@ const ProgressBar = ({ file, setFile, setFileUrl, images, count }) => {
   useEffect(() => {
     if (url) {
       if (images && count) {
-        setFile(null);
+        setFile((prevFiles) => {
+          const name = "file_" + count;
+          const newFiles = { ...prevFiles };
+          newFiles[name] = null;
+
+          return newFiles;
+        });
         setFileUrl((prevState) => {
           const name = "image_" + count;
           const newState = { ...prevState };
@@ -25,16 +31,29 @@ const ProgressBar = ({ file, setFile, setFileUrl, images, count }) => {
   }, [url, setFile, setFileUrl, images, count]);
 
   return (
-    <motion.div
+    <div
       style={{
-        height: "5px",
+        border: "1px solid",
+        borderColor: colors.mainOrange,
+        borderRadius: "10px",
+        height: "8px",
         marginTop: "20px",
-        backgroundColor: colors.mainOrange,
-        maxWidth: "100%",
+        maxWidth: "92%",
       }}
-      initial={{ width: 0 }}
-      animate={{ width: progress + "%" }}
-    ></motion.div>
+    >
+      <motion.div
+        style={{
+          height: "8px",
+          backgroundColor: colors.mainOrange,
+          maxWidth: "100%",
+          border: "1px solid",
+          borderColor: colors.mainOrange,
+          borderRadius: "10px",
+        }}
+        initial={{ width: 0 }}
+        animate={{ width: progress + "%" }}
+      ></motion.div>
+    </div>
   );
 };
 

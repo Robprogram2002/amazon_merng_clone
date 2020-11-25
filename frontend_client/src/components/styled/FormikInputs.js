@@ -149,3 +149,25 @@ export const MySelect = ({ label, ...props }) => {
     </div>
   );
 };
+
+export const MyNumberInput = ({ label, ...props }) => {
+  const [field, meta] = useField(props);
+  return (
+    <div>
+      {label && (
+        <LabelForm htmlFor={props.id || props.name} font={props.font}>
+          {label}
+        </LabelForm>
+      )}
+      <InputStyled
+        className="number-input"
+        {...field}
+        {...props}
+        // error={props.error}
+      />
+      {meta.touched && meta.error ? (
+        <SpanError className="error">{meta.error}</SpanError>
+      ) : null}
+    </div>
+  );
+};

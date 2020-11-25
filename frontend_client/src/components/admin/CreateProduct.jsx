@@ -5,18 +5,19 @@ import {
   Divcenter,
   DivColumn,
   DivContainer,
+  DivDouble,
   DivTriple,
 } from "../styled/Containers";
 import { Title } from "../styled/Form";
 import colors from "../../constants/colors";
-import { ErrorMessage, Field, Form, Formik } from "formik";
+import { ErrorMessage, Field, FieldArray, Form, Formik } from "formik";
 import {
   LabelForm,
   MyTextInput,
-  SpanError,
   UploadFileInput,
   UploadFileLabel,
   LoadImage,
+  MyNumberInput,
 } from "../styled/FormikInputs";
 import { GET_DEPARMENTS } from "./AddDepartment";
 import { SimpleButton, TransparentButton } from "../styled/Buttons";
@@ -83,8 +84,8 @@ const ADD_PRODUCT_MUTATION = gql`
 
 const ProductSchemaValidation = Yup.object({
   title: Yup.string().required().min(6).max(300),
-  price: Yup.number().min(1).max(10000000).positive(),
-  stock: Yup.number().min(0).max(100000).positive().truncate(),
+  price: Yup.number().min(1).max(10000000).positive().required(),
+  stock: Yup.number().min(0).max(100000).positive().truncate().required(),
   brand: Yup.string().required(),
   prime: Yup.boolean(),
   departmentId: Yup.string().required("It's necessary select a department"),
@@ -111,15 +112,18 @@ const ProductSchemaValidation = Yup.object({
 
 const CreateProduct = () => {
   const [addProduct, { loading }] = useMutation(ADD_PRODUCT_MUTATION, {
-    // onCompleted: (data) => console.log(data),
+    onCompleted: (data) => console.log(data),
   });
   const [categories, setCategories] = useState(null);
   const [subcategories, setSubcategories] = useState(null);
   const [descriptionData, setDescriptionData] = useState("");
   const [images, setImages] = useState({});
-  const [imageFile, setImageFile] = useState(null);
+  const [imageFile, setImageFile] = useState({});
   const [error, setError] = useState(null);
   const [imageCount, setImageCount] = useState(6);
+  const [textCount, setTextCount] = useState(0);
+
+  error && console.error(error);
 
   const departments = useQuery(GET_DEPARMENTS, {
     onError: (error) => console.log(error),
@@ -127,7 +131,7 @@ const CreateProduct = () => {
   });
 
   const sellers = useQuery(GET_SELLERS_QUERY, {
-    onCompleted: (data) => console.log(data.getSellers),
+    // onCompleted: (data) => console.log(data.getSellers),
   });
 
   const handlerDepartmentId = (id) => {
@@ -154,15 +158,19 @@ const CreateProduct = () => {
     let selected = e.target.files[0];
 
     if (selected && types.includes(selected.type)) {
-      setImageFile(selected);
+      setImageFile((prevState) => {
+        const name = "file_" + round;
+        const newState = { ...prevState };
+        newState[name] = selected;
+
+        return newState;
+      });
       setError("");
     } else {
-      setImageFile(selected);
+      setImageFile(null);
       setError("Please select an image file (png or jpg)");
     }
   };
-
-  console.log(images);
 
   // const [getDepartment, {loading}] = useLazyQuery()
 
@@ -183,14 +191,57 @@ const CreateProduct = () => {
             categoryId: "",
             subcategoryId: "",
             sellerId: "",
+            caracteristics: [],
             title: "",
             price: 0.0,
             stock: 0,
             brand: "",
             prime: false,
+            discount: 0.0,
           }}
           validateOnBlur={true}
           validationSchema={ProductSchemaValidation}
+          onSubmit={async (values, actions) => {
+            await addProduct({
+              variables: {
+                departmentId: values.departmentId,
+                categoryId: values.categoryId,
+                subcategoryId: values.subcategoryId,
+                sellerId: values.sellerId,
+                caracteristicas: values.caracteristics,
+                title: values.title,
+                description: descriptionData,
+                images: Object.values(images),
+                price: values.price,
+                stock: values.stock,
+                prime: values.prime ? true : false,
+                brand: values.brand,
+              },
+            });
+
+            setCategories(null);
+            setSubcategories(null);
+            setImages({});
+            setImageFile({});
+            setTextCount(0);
+            setImageCount(6);
+            setDescriptionData("");
+            actions.resetForm();
+
+            // A BETTER WAY OF DO THE SAME ABOVE CODE
+
+            // const data = {
+            //   ...values,
+            //   prime: values.prime ? true : false,
+            //   caracteristicas: values.caracteristics,
+            //   description: descriptionData,
+            //   images: Object.values(images),
+            // };
+
+            // if (!values.subcategoryId) {
+            //   data["subcategoryId"] = null;
+            // }
+          }}
         >
           {(formikProps) => (
             <Form autoComplete="Off" onSubmit={formikProps.handleSubmit}>
@@ -310,13 +361,23 @@ const CreateProduct = () => {
                   placeholder="Begin tiping a description here ..."
                 />
                 <br />
-                <div style={{ display: "flex", alignItems: "center" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
                   <LabelForm>Select the images for the product</LabelForm>
                   <TransparentButton
                     color="green"
                     type="button"
-                    width={320}
-                    onClick={() => setImageCount((prevState) => prevState + 1)}
+                    width={200}
+                    onClick={() =>
+                      setImageCount((prevState) =>
+                        prevState <= 12 ? prevState + 1 : prevState
+                      )
+                    }
                   >
                     <Icon color="green" icon_name="fas fa-plus" />
                     Add another image
@@ -324,7 +385,6 @@ const CreateProduct = () => {
                 </div>
                 <Divcenter>
                   <DivTriple
-                    maxHeight={500}
                     height={100}
                     width={100}
                     percentaje={true}
@@ -357,12 +417,10 @@ const CreateProduct = () => {
                               <Icon icon_name="fas fa-camera-retro" /> Upload
                             </UploadFileLabel>
                           </div>
-                          {error && (
-                            <SpanError className="error">{error}</SpanError>
-                          )}
-                          {imageFile && (
+
+                          {imageFile["file_" + (index + 1)] && (
                             <ProgressBar
-                              file={imageFile}
+                              file={imageFile["file_" + (index + 1)]}
                               setFile={setImageFile}
                               setFileUrl={setImages}
                               images={true}
@@ -384,6 +442,125 @@ const CreateProduct = () => {
                       ))}
                   </DivTriple>
                 </Divcenter>
+                <DivDouble style={{ marginTop: "2rem" }}>
+                  <MyNumberInput
+                    label="Product Price :"
+                    name="price"
+                    type="number"
+                    step={100}
+                    height={34}
+                    width={95}
+                    font={1.4}
+                    error={
+                      formikProps.errors.price && formikProps.touched.price
+                        ? true
+                        : false
+                    }
+                  />
+                  <MyNumberInput
+                    label="Product Stock :"
+                    name="stock"
+                    type="number"
+                    height={34}
+                    width={95}
+                    font={1.4}
+                    error={
+                      formikProps.errors.stock && formikProps.touched.stock
+                        ? true
+                        : false
+                    }
+                  />
+                </DivDouble>
+                <DivDouble style={{ marginTop: "2rem" }}>
+                  <div>
+                    <MyTextInput
+                      label="Product Brand :"
+                      name="brand"
+                      type="text"
+                      height={34}
+                      width={95}
+                      placeholder="Begin tiping here..."
+                      font={1.4}
+                      error={
+                        formikProps.errors.brand && formikProps.touched.brand
+                          ? true
+                          : false
+                      }
+                    />
+                  </div>
+
+                  <div>
+                    <LabelForm font={1.4}>Select one</LabelForm>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-around",
+                        padding: ".2rem 1rem",
+                      }}
+                    >
+                      <label>
+                        <Field type="checkbox" name="prime" value={true} />
+                        Prime Product
+                      </label>
+                      <label>
+                        <Field
+                          type="checkbox"
+                          name="checked"
+                          value="notPrime"
+                        />
+                        Normal Product
+                      </label>
+                    </div>
+                  </div>
+                </DivDouble>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <LabelForm>Add product's caracteristics</LabelForm>
+                  <TransparentButton
+                    color="green"
+                    type="button"
+                    width={60}
+                    onClick={() =>
+                      setTextCount((prevState) =>
+                        prevState <= 5 ? prevState + 1 : prevState
+                      )
+                    }
+                  >
+                    <Icon color="green" icon_name="fas fa-plus" />
+                  </TransparentButton>
+                </div>
+                <FieldArray name="caracteristics">
+                  {() => (
+                    <DivDouble
+                      style={{ gridTemplateRows: "1fr", gap: "1rem 0rem" }}
+                    >
+                      {textCount > 0 &&
+                        Array(textCount)
+                          .fill()
+                          .map((_, index) => (
+                            <div>
+                              <MyTextInput
+                                label={`caracteristic (${index + 1})`}
+                                name={`caracteristics.${index}`}
+                                type="text"
+                                height={34}
+                                width={95}
+                                placeholder="Begin tiping here..."
+                                font={1.4}
+                              />
+                            </div>
+                          ))}
+                    </DivDouble>
+                  )}
+                </FieldArray>
+                <br />
+                <MyNumberInput
+                  label="Product Distcount (percentaje) :"
+                  name="discount"
+                  type="number"
+                  height={34}
+                  width={25}
+                  font={1.4}
+                />
                 <br />
                 <br />
                 <Divcenter>
